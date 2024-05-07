@@ -1,16 +1,16 @@
 package com.example.testproject.service.imp;
 
-import com.example.testproject.mapper.DeptLogMapper;
+import com.example.testproject.aop.MyLog;
+import com.example.testproject.mapper.OperLogMapper;
 import com.example.testproject.mapper.DeptMapper;
 import com.example.testproject.mapper.EmpMapper;
 import com.example.testproject.model.Dept;
-import com.example.testproject.model.DeptLog;
+import com.example.testproject.model.OperLog;
 import com.example.testproject.service.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
@@ -22,7 +22,7 @@ public class DeptServiceImp implements DeptService {
     @Autowired
     private EmpMapper empMapper;
     @Autowired
-    private DeptLogMapper deptLogMapper;
+    private OperLogMapper operLogMapper;
 
 
     @Override
@@ -30,6 +30,7 @@ public class DeptServiceImp implements DeptService {
         return deptMapper.findAll();
     }
 
+    @MyLog
     @Transactional(rollbackFor = Exception.class)//事务管理 delete at the same time // 所有异常
     @Override
     public void deleteById(Integer id) {
@@ -39,15 +40,16 @@ public class DeptServiceImp implements DeptService {
             empMapper.deleteByDepId(id);
         }finally{
             //Always excuted. require_new will not rerolled
-            DeptLog deptLog = new DeptLog();
-            deptLog.setCreateTime(LocalDateTime.now());
-            deptLog.setDescription("Deleted department: " + id);
-            deptLogMapper.insert(deptLog);
+            OperLog operLog = new OperLog();
+            //deptLog.setCreateTime(LocalDateTime.now());
+            //deptLog.setDescription("Deleted department: " + id);
+            //deptLogMapper.insert(deptLog);
         }
 
 
     }
 
+    @MyLog
     @Override
     public void addDept(Dept dept) {
         dept.setCreateTime(now());
@@ -55,6 +57,7 @@ public class DeptServiceImp implements DeptService {
         deptMapper.addDept(dept);
     }
 
+    @MyLog
     @Override
     public void updateDept(Integer id) {
         deptMapper.updateDept(id);

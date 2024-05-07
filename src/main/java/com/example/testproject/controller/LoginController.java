@@ -29,6 +29,7 @@ public class LoginController{
            // claims.put("id", e.getId());
             claims.put("name", e.getName());
             claims.put("username", e.getUsername());
+            claims.put("id", e.getId());
             String jwt = JwtUtils.generateJwt(claims);
             return Result.success(jwt);
         }

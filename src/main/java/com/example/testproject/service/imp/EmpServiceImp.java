@@ -1,5 +1,6 @@
 package com.example.testproject.service.imp;
 
+import com.example.testproject.aop.MyLog;
 import com.example.testproject.mapper.EmpMapper;
 import com.example.testproject.model.Emp;
 import com.example.testproject.model.PageBean;
@@ -24,19 +25,19 @@ public class EmpServiceImp implements EmpService {
         PageBean pageBean = new PageBean(count, empList);
         return pageBean;
     };
-
+    @MyLog
     @Override
     public void delete(List<Integer> ids){
         empMapper.deleteEmps(ids);
     }
-
+    @MyLog
     @Override
     public void add(Emp emp){
         emp.setCreateTime(LocalDateTime.now());
         emp.setUpdateTime(LocalDateTime.now());
         empMapper.add(emp);
     }
-
+    @MyLog
     @Override
     public void update(Emp emp){
         empMapper.update(emp);
